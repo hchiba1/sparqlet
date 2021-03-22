@@ -1,1 +1,1 @@
-# sparqlet
+# SPARQLet
