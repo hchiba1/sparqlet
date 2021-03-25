@@ -1,5 +1,9 @@
 # PDBエントリをポリペプチドの数で分類(mode対応版)（井手）
 
+## Endpoint
+
+https://integbio.jp/rdf/sparql
+
 ## Parameters
 
 * `categoryIds` -(type:エントリーに含まれるポリペプチドの数の範囲)
@@ -9,22 +13,20 @@
 * `mode` 
   * example: idList, objectList
 
-## Endpoint
-
-https://integbio.jp/rdf/sparql
-
 ## `input_ragne`
 ```javascript
-({categoryIds})=>{
+({ categoryIds }) => {
   categoryIds = categoryIds.replace(/\s/g, "");
   if (categoryIds.match(/\d-/) || categoryIds.match(/-\d/)) {
-    let range = {begin: 1, end: 125};
-    if (categoryIds.match(/^[\d\.]+-/)) range.begin = Number(categoryIds.match(/^([\d\.]+)-/)[1]);
-    if (categoryIds.match(/-[\d\.]+$/)) range.end = Number(categoryIds.match(/-([\d\.]+)$/)[1]);
-    return range;         
+    let range = { begin: 1, end: 125 };
+    if (categoryIds.match(/^[\d\.]+-/))
+      range.begin = Number(categoryIds.match(/^([\d\.]+)-/)[1]);
+    if (categoryIds.match(/-[\d\.]+$/))
+      range.end = Number(categoryIds.match(/-([\d\.]+)$/)[1]);
+    return range;
   }
   return false;
-}
+};
 ```
 
 ## `input_pdb_entries`
@@ -34,7 +36,7 @@ https://integbio.jp/rdf/sparql
   if (queryIds.match(/\S/)) {
     return queryIds.split(/\s+/);
   }
-}
+};
 ```
 
 ## `main`
@@ -51,12 +53,11 @@ SELECT DISTINCT ?peptides_count ?PDBentry ?title
 SELECT ?peptides_count (COUNT(?peptides_count) AS ?count)
 {{/if}}
 WHERE {
-  
-     {{#if input_ragne}}
-     VALUES (?min ?max) {( {{#each input_ragne}} {{this}} {{/each}} )}
-     FILTER(?peptides_count>= ?min)
-     FILTER(?peptides_count<= ?max)
-     {{/if}}
+  {{#if input_ragne}}
+  VALUES (?min ?max) {( {{#each input_ragne}} {{this}} {{/each}} )}
+  FILTER(?peptides_count >= ?min)
+  FILTER(?peptides_count <= ?max)
+  {{/if}}
   {
     SELECT (COUNT(?polypeptide) AS ?peptides_count) ?PDBentry {{#if mode}} ?title {{/if}}
     WHERE {
@@ -82,13 +83,15 @@ ORDER BY (?peptides_count)
 ({ main, mode }) => {
   if (mode == "idList") {
     return Array.from(new Set(
-      main.results.bindings.map((d) => d.PDBentry.value.replace("https://rdf.wwpdb.org/pdb/", ""))
+      main.results.bindings.map((d) =>
+        d.PDBentry.value.replace("https://rdf.wwpdb.org/pdb/", "")
+      )
     ));
   } else if (mode == "objectList") {
     return main.results.bindings.map((d) => ({
-      id: d.PDBentry.value.replace("https://rdf.wwpdb.org/pdb/", ""), 
+      id: d.PDBentry.value.replace("https://rdf.wwpdb.org/pdb/", ""),
       attribute: {
-        categoryId: d.peptides_count.value, 
+        categoryId: d.peptides_count.value,
         label: makeLabel(d.peptides_count.value)
       }
     }));
@@ -109,5 +112,5 @@ ORDER BY (?peptides_count)
       return number;
     }
   }
-}
+};
 ```
