@@ -41,9 +41,9 @@ https://integbio.jp/rdf/sparql
 PREFIX pdbr: <https://rdf.wwpdb.org/pdb/>
 PREFIX pdbo: <https://rdf.wwpdb.org/schema/pdbx-v50.owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
 {{#if mode}}
 SELECT DISTINCT ?PDBentry ?target_num
 {{else}}
@@ -78,9 +78,9 @@ order by ?target_num
 PREFIX pdbr: <https://rdf.wwpdb.org/pdb/>
 PREFIX pdbo: <https://rdf.wwpdb.org/schema/pdbx-v50.owl#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
 {{#if mode}}
 SELECT DISTINCT ?PDBentry ?target_num
 {{else}}
