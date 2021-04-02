@@ -6,8 +6,8 @@ https://orth.dbcls.jp/sparql-dev
 
 ## Parameters
 * `ncbigene`
-  * default: 1
-  * example: 1
+  * default: 100
+  * example: 100
 
 ## `gene_list`
 ```javascript
@@ -122,17 +122,31 @@ WHERE {
   return main.results.bindings.map((elem) => ({
     id: elem.id.value,
     type_of_gene: elem.type_of_gene.value,
-    hgnc_symbol: elem.hgnc_symbol?.value,
+    hgnc_symbol: getValue(elem.hgnc_symbol),
     synonyms: elem.synonyms.value,
     description: elem.description.value,
     other_descriptions: elem.other_descriptions.value,
     refex_tissue_labels: elem.tissue_labels?.value,
-    gtex_v6_tissue_labels: elem.gtex_v6_tissue_labels?.value,
-    homologene_branch_label: elem.homologene_branch_label?.value,
-    human_paralog_count: elem.paralog_count?.value,
-    humman_paralog_ncbigene_ids: elem.human_paralog_ids?.value,
+    gtex_v6_tissue_labels: getValue(elem.gtex_v6_tissue_labels),
+    homologene_branch_label: getValue(elem.homologene_branch_label),
+    human_paralog_count: getNumber(elem.paralog_count),
+    humman_paralog_ncbigene_ids: getValue(elem.human_paralog_ids),
     chromosome: elem.chromosome.value,
     map_location: elem.map_location.value,
   }));
+  function getValue(obj) {
+    if (obj) {
+      return obj.value;
+    } else {
+      return '';
+    }
+  }
+  function getNumber(obj) {
+    if (obj == null) {
+      return undefined;
+    } else {
+      return Number(obj.value);
+    }
+  }
 };
 ```
