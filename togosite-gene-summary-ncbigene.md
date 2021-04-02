@@ -32,21 +32,21 @@ PREFIX hop: <http://purl.org/net/orthordf/hOP/ontology#>
 SELECT ?id ?hgnc_symbol ?description ?type_of_gene ?chromosome ?map_location (GROUP_CONCAT(DISTINCT ?synonym; separator="|") AS ?synonyms) (GROUP_CONCAT(DISTINCT ?others; separator="|") AS ?other_descriptions)
 WHERE {
   {{#if gene_list}}
-  VALUES ?gene { {{#each gene_list}} ncbigene:{{this}} {{/each}} }
+  VALUES ?human_gene { {{#each gene_list}} ncbigene:{{this}} {{/each}} }
   {{/if}}
-  ?gene dct:description ?description ;
+  ?human_gene dct:description ?description ;
       dct:identifier ?id ;
       hop:typeOfGene ?type_of_gene ;
       nuc:chromosome ?chromosome ;
       nuc:map ?map_location .
   OPTIONAL {
-    ?gene nuc:standard_name ?hgnc_symbol .
+    ?human_gene nuc:standard_name ?hgnc_symbol .
   }
   OPTIONAL {
-    ?gene nuc:gene_synonym ?synonym .
+    ?human_gene nuc:gene_synonym ?synonym .
   }
   OPTIONAL {
-    ?gene dct:alternative ?others .
+    ?human_gene dct:alternative ?others .
   }
 }
 ```
